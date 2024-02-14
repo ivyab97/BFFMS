@@ -5,11 +5,13 @@ import com.sistemasactivos.apirest.bff.model.CustomerRequest;
 import com.sistemasactivos.apirest.bff.model.CustomerResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 /**
  * @author Ivan Andres Brestt
  */
 
+@Service
 public class CustomerService implements ICustomerService{
 
     @Override
