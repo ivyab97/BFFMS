@@ -11,8 +11,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PagedResponse implements Serializable{
-    private List<BaseDTO> content;
+public class PagedResponse<D extends BaseDTO> extends BaseDTO{
+    private List<D> content;
     private PageableDTO pageable;
     private boolean last;
     private int totalElements;

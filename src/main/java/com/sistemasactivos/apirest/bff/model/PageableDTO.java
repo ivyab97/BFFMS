@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-class PageableDTO implements Serializable{
+class PageableDTO extends BaseDTO{
     private int pageNumber;
     private int pageSize;
     private SortDTO sort;

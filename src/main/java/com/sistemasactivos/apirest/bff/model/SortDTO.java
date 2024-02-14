@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-class SortDTO implements Serializable{
+class SortDTO extends BaseDTO{
     private boolean empty;
     private boolean sorted;
     private boolean unsorted;
