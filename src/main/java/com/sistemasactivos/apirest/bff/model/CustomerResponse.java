@@ -17,7 +17,7 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomerResponse {
+public class CustomerResponse extends BaseDTO{
 
     @Schema(description = "Identifier attribute", example = "10")
     private Integer customerId;
