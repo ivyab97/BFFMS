@@ -11,12 +11,12 @@ import reactor.core.publisher.Mono;
 
 public interface IBaseService <C extends BaseDTO, CR extends BaseDTO, ID extends Integer>{
 
-    public Mono<PagedResponse<C>> findAllByStatusEquals(Boolean status, Integer page, Integer size) throws Exception;
-    public Mono<C> findByIdActive(ID id)throws Exception; // Solo busca los activos
-    public Mono<C> findById(ID id) throws Exception;  // Busca todos los registros, activos o no
-    public Mono<C> save (CR entity) throws Exception;
-    public Mono<C> update(ID id, CR entity) throws Exception;
-    public Mono<Void> softDelete(ID id) throws Exception;
-    public Mono<C> activate(ID id) throws Exception;  //Da de alta un recurso
+    public Mono<PagedResponse<C>> findAllByStatusEquals(Boolean status, Integer page, Integer size);
+    public Mono<C> findByIdActive(ID id); // Solo busca los activos
+    public Mono<C> findById(ID id);  // Busca todos los registros, activos o no
+    public Mono<C> save (CR request);
+    public Mono<C> update(ID id, CR request);
+    public Mono<Void> softDelete(ID id);
+    public Mono<C> activate(ID id) ;  //Da de alta un recurso
     
 }

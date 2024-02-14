@@ -3,14 +3,14 @@ package com.sistemasactivos.apirest.bff.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sistemasactivos.apirest.bff.interfaces.ICustomerService;
+import com.sistemasactivos.apirest.bff.model.BaseDTO;
 import com.sistemasactivos.apirest.bff.model.CustomerRequest;
 import com.sistemasactivos.apirest.bff.model.CustomerResponse;
 import com.sistemasactivos.apirest.bff.model.PagedResponse;
 import com.sistemasactivos.apirest.bff.resources.exception.BusinessException;
 import com.sistemasactivos.apirest.bff.resources.exception.HTTPError;
+import java.io.Serializable;
 import java.time.Duration;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,6 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 
@@ -27,13 +26,13 @@ import reactor.core.publisher.Mono;
  */
 
 @Service
-public class CustomerService implements ICustomerService{
+public class CustomerService extends BaseService<CustomerResponse, CustomerRequest, Integer> implements ICustomerService{
     
     @Autowired
     WebClient webClient;
 
     @Override
-    public Mono<PagedResponse<CustomerResponse>> findAllByStatusEquals(Boolean status, Integer page, Integer size) throws Exception {
+    public Mono<PagedResponse<CustomerResponse>> findAllByStatusEquals(Boolean status, Integer page, Integer size) {
         
         ParameterizedTypeReference<PagedResponse<CustomerResponse>> responseType = new ParameterizedTypeReference<>() {};
 
@@ -60,7 +59,7 @@ public class CustomerService implements ICustomerService{
     
 
     @Override
-    public Mono<CustomerResponse> findByIdActive(Integer id) throws Exception {
+    public Mono<CustomerResponse> findByIdActive(Integer id) {
         return webClient.put()
                 .uri(uriBuilder -> uriBuilder
                     .path("/{id}")
@@ -81,7 +80,7 @@ public class CustomerService implements ICustomerService{
      
 
     @Override
-    public Mono<CustomerResponse> findById(Integer id) throws Exception {
+    public Mono<CustomerResponse> findById(Integer id) {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
                     .path("/{id}/admin")
@@ -102,7 +101,7 @@ public class CustomerService implements ICustomerService{
     
 
     @Override
-    public Mono<CustomerResponse> save(CustomerRequest request) throws Exception {
+    public Mono<CustomerResponse> save(CustomerRequest request) {
         return webClient.post()
                 .uri("")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -123,7 +122,7 @@ public class CustomerService implements ICustomerService{
     
 
     @Override
-    public Mono<CustomerResponse> update(Integer id, CustomerRequest request) throws Exception {
+    public Mono<CustomerResponse> update(Integer id, CustomerRequest request) {
         return webClient.put()
                 .uri("" + id)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -144,7 +143,7 @@ public class CustomerService implements ICustomerService{
 
     
     @Override
-    public Mono<Void> softDelete(Integer id) throws Exception {
+    public Mono<Void> softDelete(Integer id) {
         return webClient.delete()
             .uri("" + id)
                 .retrieve()
@@ -163,7 +162,7 @@ public class CustomerService implements ICustomerService{
     
 
     @Override
-    public Mono<CustomerResponse> activate(Integer id) throws Exception {
+    public Mono<CustomerResponse> activate(Integer id) {
         return webClient.put()
                 .uri(uriBuilder -> uriBuilder
                     .path("/{id}/activate")
