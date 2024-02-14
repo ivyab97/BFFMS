@@ -15,7 +15,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
 
 @Configuration
-@EnableWebFlux
 public class WebFluxConfig implements WebFluxConfigurer  {
     
     
