@@ -27,6 +27,11 @@ public class WebFluxConfig implements WebFluxConfigurer  {
         return createWebClient("http://localhost:8081/api/v1/accounts", "admin", "12345");
     }
     
+    @Bean
+    public WebClient getWebClientCreditCard(){
+        return createWebClient("http://localhost:8081/api/v1/creditcards", "admin", "12345");
+    }
+    
     private WebClient createWebClient (String url, String user, String password){
         HttpClient httpClient = HttpClient.create()
                 .tcpConfiguration(topClient ->
