@@ -37,10 +37,24 @@ public abstract class BaseService<E extends BaseDTO, R extends BaseDTO, ID exten
         this.responseTypeE = responseTypeE;
         this.responseTypeR = responseTypeR;
     }
+    
+    protected <T> Mono<T> handleErrors(Mono<T> mono) {
+        return mono.onErrorMap(WebClientResponseException.class, ex -> {
+            try {
+                HTTPError errorResponse = new ObjectMapper().readValue(ex.getResponseBodyAsString(), HTTPError.class);
+                return new BusinessException(HttpStatus.valueOf(ex.getRawStatusCode()), errorResponse.getMessage());
+            } catch (JsonProcessingException e) {
+                return new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR, "Error en el servidor, intente más tarde...");
+            }
+        })
+        .timeout(Duration.ofMillis(10_000))
+        .switchIfEmpty(Mono.error(new RuntimeException("No se encontro el recurso")));
+    }
 
     @Override
     public Mono<PagedResponse<E>> findAllByStatusEquals(Boolean status, Integer page, Integer size) {
-        return webClient.get()
+        return handleErrors(
+            webClient.get()
                 .uri(uriBuilder -> uriBuilder
                     .path("")
                     .queryParam("status", status)
@@ -49,143 +63,85 @@ public abstract class BaseService<E extends BaseDTO, R extends BaseDTO, ID exten
                     .build())
                 .retrieve()
                 .bodyToMono(responseTypePaged)
-                .onErrorMap(WebClientResponseException.class, ex -> {
-                    try{
-                        HTTPError errorResponse = new ObjectMapper().readValue(ex.getResponseBodyAsString(), HTTPError.class);
-                        return new BusinessException(HttpStatus.valueOf(ex.getRawStatusCode()), errorResponse.getMessage());
-                    } catch(JsonProcessingException e){
-                        return new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR, "Error en el servidor, intente más tarde...");
-                    }
-                })
-                .timeout(Duration.ofMillis(10_000))
-                .switchIfEmpty(Mono.error(new RuntimeException("No se encontro el recurso")));
+        );
     }
     
 
     @Override
-    public Mono<E> findByIdActive(Integer id) {
-        return webClient.get()
+    public Mono<E> findByIdActive(Integer id) { 
+        return handleErrors(
+                webClient.get()
                 .uri(uriBuilder -> uriBuilder
                     .path("/{id}")
                     .build(id))
                 .retrieve()
                 .bodyToMono(responseTypeE)
-                .onErrorMap(WebClientResponseException.class, ex -> {
-                    try{
-                        HTTPError errorResponse = new ObjectMapper().readValue(ex.getResponseBodyAsString(), HTTPError.class);
-                        return new BusinessException(HttpStatus.valueOf(ex.getRawStatusCode()), errorResponse.getMessage());
-                    } catch(JsonProcessingException e){
-                        return new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR, "Error en el servidor, intente más tarde...");
-                    }
-                })
-                .timeout(Duration.ofMillis(10_000))
-                .switchIfEmpty(Mono.error(new RuntimeException("No se encontro el recurso")));
+        );
     }
      
 
     @Override
     public Mono<E> findById(Integer id) {
-        return webClient.get()
+        return handleErrors(
+                webClient.get()
                 .uri(uriBuilder -> uriBuilder
                     .path("/{id}/admin")
                     .build(id))
                 .retrieve()
                 .bodyToMono(responseTypeE)
-                .onErrorMap(WebClientResponseException.class, ex -> {
-                    try{
-                        HTTPError errorResponse = new ObjectMapper().readValue(ex.getResponseBodyAsString(), HTTPError.class);
-                        return new BusinessException(HttpStatus.valueOf(ex.getRawStatusCode()), errorResponse.getMessage());
-                    } catch(JsonProcessingException e){
-                        return new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR, "Error en el servidor, intente más tarde...");
-                    }
-                })
-                .timeout(Duration.ofMillis(10_000))
-                .switchIfEmpty(Mono.error(new RuntimeException("No se encontro el recurso")));
+        );        
     }
     
 
     @Override
     public Mono<E> save(R request) {
-        return webClient.post()
+        return handleErrors(
+                webClient.post()
                 .uri("")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(request), CustomerRequest.class)
                 .retrieve()
                 .bodyToMono(responseTypeE)
-                .onErrorMap(WebClientResponseException.class, ex -> {
-                    try{
-                        HTTPError errorResponse = new ObjectMapper().readValue(ex.getResponseBodyAsString(), HTTPError.class);
-                        return new BusinessException(HttpStatus.valueOf(ex.getRawStatusCode()), errorResponse.getMessage());
-                    } catch(JsonProcessingException e){
-                        return new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR, "Error en el servidor, intente más tarde...");
-                    }
-                })
-                .timeout(Duration.ofMillis(10_000))
-                .switchIfEmpty(Mono.error(new RuntimeException("No se encontro el recurso")));
+        );   
     }
     
 
     @Override
     public Mono<E> update(Integer id, R request) {
-        return webClient.put()
+        return handleErrors(
+                webClient.put()
                 .uri("/" + id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(request), responseTypeR)
                 .retrieve()
                 .bodyToMono(responseTypeE)
-                .onErrorMap(WebClientResponseException.class, ex -> {
-                    try{
-                        HTTPError errorResponse = new ObjectMapper().readValue(ex.getResponseBodyAsString(), HTTPError.class);
-                        return new BusinessException(HttpStatus.valueOf(ex.getRawStatusCode()), errorResponse.getMessage());
-                    } catch(JsonProcessingException e){
-                        return new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR, "Error en el servidor, intente más tarde...");
-                    }
-                })
-                .timeout(Duration.ofMillis(10_000))
-                .switchIfEmpty(Mono.error(new RuntimeException("No se encontro el recurso")));
+        );
+                
     }
     
     
 
     @Override
     public Mono<E> activate(Integer id) {
-        return webClient.put()
+        return handleErrors(
+                webClient.put()
                 .uri(uriBuilder -> uriBuilder
                     .path("/{id}/activate")
                     .build(id))
                 .retrieve()
                 .bodyToMono(responseTypeE)
-                .onErrorMap(WebClientResponseException.class, ex -> {
-                    try{
-                        HTTPError errorResponse = new ObjectMapper().readValue(ex.getResponseBodyAsString(), HTTPError.class);
-                        return new BusinessException(HttpStatus.valueOf(ex.getRawStatusCode()), errorResponse.getMessage());
-                    } catch(JsonProcessingException e){
-                        return new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR, "Error en el servidor, intente más tarde...");
-                    }
-                })
-                .timeout(Duration.ofMillis(10_000))
-                .switchIfEmpty(Mono.error(new RuntimeException("No se encontro el recurso")));
+        );
     }
     
     
     @Override
     public Mono<E> softDelete(Integer id) {
-        return webClient.delete()
-            .uri("/" + id)
+        return handleErrors(
+                webClient.delete()
+                .uri("/" + id)
                 .retrieve()
                 .bodyToMono(responseTypeE)
-                .onErrorMap(WebClientResponseException.class, ex -> {
-                    try{
-                        
-                        HTTPError errorResponse = new ObjectMapper().readValue(ex.getResponseBodyAsString(), HTTPError.class);
-                        return new BusinessException(HttpStatus.valueOf(ex.getRawStatusCode()), errorResponse.getMessage());
-                        
-                    } catch(JsonProcessingException e){
-                        return new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR, "Error en el servidor, intente más tarde...");
-                    }
-                })
-                .timeout(Duration.ofMillis(10_000))
-                .switchIfEmpty(Mono.error(new BusinessException(HttpStatus.NO_CONTENT, "Eliminado con exito.")));
+        );
     }
     
 }

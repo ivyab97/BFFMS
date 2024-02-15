@@ -34,22 +34,14 @@ public class CreditCardService extends BaseService<CreditCardResponse, CreditCar
     
     @Override
     public Mono<CreditCardResponse> save(Integer accountId, CreditCardRequest request) {
-        return webClient.post()
+        return handleErrors(
+                webClient.post()
                 .uri("/" + accountId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(request), CustomerRequest.class)
                 .retrieve()
                 .bodyToMono(responseTypeE)
-                .onErrorMap(WebClientResponseException.class, ex -> {
-                    try{
-                        HTTPError errorResponse = new ObjectMapper().readValue(ex.getResponseBodyAsString(), HTTPError.class);
-                        return new BusinessException(HttpStatus.valueOf(ex.getRawStatusCode()), errorResponse.getMessage());
-                    } catch(JsonProcessingException e){
-                        return new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR, "Error en el servidor, intente más tarde...");
-                    }
-                })
-                .timeout(Duration.ofMillis(10_000))
-                .switchIfEmpty(Mono.error(new RuntimeException("No se encontro el recurso")));
+        );
     }
     
 }
