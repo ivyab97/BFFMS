@@ -81,7 +81,6 @@ public abstract class BaseController <E extends BaseDTO, D extends BaseDTO, S ex
     
 
     @Override
-    @PostMapping("")
     @Operation(
         summary = "Dar de alta un registro con su respectiva información.",
         description = "Dar de alta un registro.",

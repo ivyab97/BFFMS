@@ -25,18 +25,21 @@ import reactor.core.publisher.Mono;
 
 public abstract class BaseService<E extends BaseDTO, R extends BaseDTO, ID extends Serializable> implements IBaseService<E, R, Integer>{
 
-    /*WebClient webClient;
+    WebClient webClient;
+    ParameterizedTypeReference<PagedResponse<E>> responseTypePaged;
+    ParameterizedTypeReference<E> responseTypeE;
+    ParameterizedTypeReference<R> responseTypeR;
+
     
-    
-    public BaseService(WebClient webClient) {
+    public BaseService(WebClient webClient, ParameterizedTypeReference<PagedResponse<E>> responseTypePaged, ParameterizedTypeReference<E> responseTypeE, ParameterizedTypeReference<R> responseTypeR) {
         this.webClient = webClient;
+        this.responseTypePaged = responseTypePaged;
+        this.responseTypeE = responseTypeE;
+        this.responseTypeR = responseTypeR;
     }
 
     @Override
     public Mono<PagedResponse<E>> findAllByStatusEquals(Boolean status, Integer page, Integer size) {
-        
-        ParameterizedTypeReference<PagedResponse<E>> responseType = new ParameterizedTypeReference<>() {};
-
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
                     .path("")
@@ -45,7 +48,7 @@ public abstract class BaseService<E extends BaseDTO, R extends BaseDTO, ID exten
                     .queryParam("size", size)
                     .build())
                 .retrieve()
-                .bodyToMono(responseType)
+                .bodyToMono(responseTypePaged)
                 .onErrorMap(WebClientResponseException.class, ex -> {
                     try{
                         HTTPError errorResponse = new ObjectMapper().readValue(ex.getResponseBodyAsString(), HTTPError.class);
@@ -61,14 +64,12 @@ public abstract class BaseService<E extends BaseDTO, R extends BaseDTO, ID exten
 
     @Override
     public Mono<E> findByIdActive(Integer id) {
-        ParameterizedTypeReference<E> responseType = new ParameterizedTypeReference<E>() {};
-
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
                     .path("/{id}")
                     .build(id))
                 .retrieve()
-                .bodyToMono(responseType)
+                .bodyToMono(responseTypeE)
                 .onErrorMap(WebClientResponseException.class, ex -> {
                     try{
                         HTTPError errorResponse = new ObjectMapper().readValue(ex.getResponseBodyAsString(), HTTPError.class);
@@ -84,14 +85,12 @@ public abstract class BaseService<E extends BaseDTO, R extends BaseDTO, ID exten
 
     @Override
     public Mono<E> findById(Integer id) {
-        ParameterizedTypeReference<E> responseType = new ParameterizedTypeReference<E>() {};
-        
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
                     .path("/{id}/admin")
                     .build(id))
                 .retrieve()
-                .bodyToMono(responseType)
+                .bodyToMono(responseTypeE)
                 .onErrorMap(WebClientResponseException.class, ex -> {
                     try{
                         HTTPError errorResponse = new ObjectMapper().readValue(ex.getResponseBodyAsString(), HTTPError.class);
@@ -107,14 +106,12 @@ public abstract class BaseService<E extends BaseDTO, R extends BaseDTO, ID exten
 
     @Override
     public Mono<E> save(R request) {
-        ParameterizedTypeReference<E> responseType = new ParameterizedTypeReference<E>() {};
-
         return webClient.post()
                 .uri("")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(request), CustomerRequest.class)
                 .retrieve()
-                .bodyToMono(responseType)
+                .bodyToMono(responseTypeE)
                 .onErrorMap(WebClientResponseException.class, ex -> {
                     try{
                         HTTPError errorResponse = new ObjectMapper().readValue(ex.getResponseBodyAsString(), HTTPError.class);
@@ -130,9 +127,6 @@ public abstract class BaseService<E extends BaseDTO, R extends BaseDTO, ID exten
 
     @Override
     public Mono<E> update(Integer id, R request) {
-        ParameterizedTypeReference<E> responseTypeE = new ParameterizedTypeReference<E>() {};
-        ParameterizedTypeReference<R> responseTypeR = new ParameterizedTypeReference<R>() {};
-        
         return webClient.put()
                 .uri("/" + id)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -155,14 +149,12 @@ public abstract class BaseService<E extends BaseDTO, R extends BaseDTO, ID exten
 
     @Override
     public Mono<E> activate(Integer id) {
-        ParameterizedTypeReference<E> responseType = new ParameterizedTypeReference<E>() {};
-        
         return webClient.put()
                 .uri(uriBuilder -> uriBuilder
                     .path("/{id}/activate")
                     .build(id))
                 .retrieve()
-                .bodyToMono(responseType)
+                .bodyToMono(responseTypeE)
                 .onErrorMap(WebClientResponseException.class, ex -> {
                     try{
                         HTTPError errorResponse = new ObjectMapper().readValue(ex.getResponseBodyAsString(), HTTPError.class);
@@ -178,11 +170,10 @@ public abstract class BaseService<E extends BaseDTO, R extends BaseDTO, ID exten
     
     @Override
     public Mono<E> softDelete(Integer id) {
-        ParameterizedTypeReference<E> responseType = new ParameterizedTypeReference<E>() {};
         return webClient.delete()
             .uri("/" + id)
                 .retrieve()
-                .bodyToMono(responseType)
+                .bodyToMono(responseTypeE)
                 .onErrorMap(WebClientResponseException.class, ex -> {
                     try{
                         
@@ -195,6 +186,6 @@ public abstract class BaseService<E extends BaseDTO, R extends BaseDTO, ID exten
                 })
                 .timeout(Duration.ofMillis(10_000))
                 .switchIfEmpty(Mono.error(new BusinessException(HttpStatus.NO_CONTENT, "Eliminado con exito.")));
-    }*/
+    }
     
 }

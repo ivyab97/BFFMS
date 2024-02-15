@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 
 /**
  * @author Ivan Andres Brestt
@@ -39,6 +40,7 @@ public class CustomerController extends BaseController<CustomerResponse, Custome
     
     
     @Override
+    @PostMapping("")
     @ApiResponse(responseCode = "201", content = @Content(schema = @Schema(implementation = CustomerResponse.class)))
     public Mono<ResponseEntity<CustomerResponse>> save(@RequestBody CustomerRequest request) {
         return super.save(request);
