@@ -9,7 +9,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ClientHttpConnector;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
-import org.springframework.web.reactive.config.EnableWebFlux;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
@@ -19,8 +18,13 @@ public class WebFluxConfig implements WebFluxConfigurer  {
     
     
     @Bean
-    public WebClient getWebClient(){
+    public WebClient getWebClientCustomer(){
         return createWebClient("http://localhost:8082/api/v1/customers", "admin", "12345");
+    }
+    
+    @Bean
+    public WebClient getWebClientAccount(){
+        return createWebClient("http://localhost:8081/api/v1/accounts", "admin", "12345");
     }
     
     private WebClient createWebClient (String url, String user, String password){
