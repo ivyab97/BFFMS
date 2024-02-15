@@ -38,7 +38,7 @@ public abstract class BaseController <E extends BaseDTO, D extends BaseDTO, S ex
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = HTTPError.class)))
         }
     )
-    public Mono<?> getAllRecord(
+    public Mono<PagedResponse<E>> getAllRecord(
             @RequestParam(required = false) Boolean status,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer size) {
@@ -58,7 +58,7 @@ public abstract class BaseController <E extends BaseDTO, D extends BaseDTO, S ex
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = HTTPError.class)))
         }
     )
-    public Mono<?> getRecordById(@PathVariable Integer id) {
+    public Mono<E> getRecordById(@PathVariable Integer id) {
         return service.findById(id);
     }
     
@@ -75,7 +75,7 @@ public abstract class BaseController <E extends BaseDTO, D extends BaseDTO, S ex
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = HTTPError.class)))
         }
     )
-    public Mono<?> getRecordByActiveId(@PathVariable Integer id) {
+    public Mono<E> getRecordByActiveId(@PathVariable Integer id) {
         return service.findByIdActive(id);
     }
     
@@ -92,7 +92,7 @@ public abstract class BaseController <E extends BaseDTO, D extends BaseDTO, S ex
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = HTTPError.class)))
         }
     )
-    public Mono<ResponseEntity<?>> save(@RequestBody D entity) {
+    public Mono<ResponseEntity<E>> save(@RequestBody D entity) {
         return service.save(entity)
                 .map(savedEntity -> ResponseEntity.status(HttpStatus.CREATED).body(savedEntity));
     }
@@ -110,7 +110,7 @@ public abstract class BaseController <E extends BaseDTO, D extends BaseDTO, S ex
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = HTTPError.class)))
         }
     )
-    public Mono<?> update(@PathVariable Integer id, @RequestBody D entity) {
+    public Mono<E> update(@PathVariable Integer id, @RequestBody D entity) {
         return service.update(id, entity);
     }
     
@@ -127,7 +127,7 @@ public abstract class BaseController <E extends BaseDTO, D extends BaseDTO, S ex
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = HTTPError.class)))
         }
     )
-    public Mono<?> activate(@PathVariable Integer id) {
+    public Mono<E> activate(@PathVariable Integer id) {
             return service.activate(id);
     }
     

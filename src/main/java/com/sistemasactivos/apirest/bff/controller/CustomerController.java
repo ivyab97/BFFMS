@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author Ivan Andres Brestt
@@ -31,30 +32,33 @@ import reactor.core.publisher.Mono;
 @RequestMapping("/bff/customer")
 public class CustomerController extends BaseController<CustomerResponse, CustomerRequest, CustomerService>{
     
+    @Autowired
+    CustomerService customerService;
+    
     @Override
     @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = CustomerResponse.class)))
-        public Mono<?> getRecordById(@PathVariable Integer id) {
+        public Mono<CustomerResponse> getRecordById(@PathVariable Integer id) {
         return super.getRecordById(id);
     }
         
         
     @Override
     @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = CustomerResponse.class)))
-    public Mono<?> getRecordByActiveId(@PathVariable Integer id) {
+    public Mono<CustomerResponse> getRecordByActiveId(@PathVariable Integer id) {
         return super.getRecordByActiveId(id);
     }
     
     
     @Override
     @ApiResponse(responseCode = "201", content = @Content(schema = @Schema(implementation = CustomerResponse.class)))
-    public Mono<ResponseEntity<?>> save(@RequestBody CustomerRequest request) {
+    public Mono<ResponseEntity<CustomerResponse>> save(@RequestBody CustomerRequest request) {
         return super.save(request);
     }
     
     
     @Override
     @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = CustomerResponse.class)))
-    public Mono<?> update(@PathVariable Integer id, @RequestBody CustomerRequest request) {
+    public Mono<CustomerResponse> update(@PathVariable Integer id, @RequestBody CustomerRequest request) {
         return super.update(id, request);
     }
 }

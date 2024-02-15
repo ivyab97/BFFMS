@@ -28,8 +28,9 @@ import reactor.core.publisher.Mono;
 @Service
 public class CustomerService extends BaseService<CustomerResponse, CustomerRequest, Integer> implements ICustomerService{
     
-    @Autowired
+   @Autowired
     WebClient webClient;
+    
 
     @Override
     public Mono<PagedResponse<CustomerResponse>> findAllByStatusEquals(Boolean status, Integer page, Integer size) {
@@ -140,29 +141,7 @@ public class CustomerService extends BaseService<CustomerResponse, CustomerReque
                 .timeout(Duration.ofMillis(10_000))
                 .switchIfEmpty(Mono.error(new RuntimeException("No se encontro el recurso")));
     }
-
     
-    /*@Override
-    public Mono<CustomerResponse> softDelete(Integer id) {
-        return webClient.delete()
-            .uri("/" + id)
-                .retrieve()
-                .bodyToMono(CustomerResponse.class)
-                .onErrorMap(WebClientResponseException.class, ex -> {
-                    try{
-                        if (ex.getStatusCode().equals(HttpStatus.NO_CONTENT)) {
-                            return new BusinessException(HttpStatus.valueOf(ex.getRawStatusCode()), "Registro eliminado exitosamente.");
-                        } else {
-                            HTTPError errorResponse = new ObjectMapper().readValue(ex.getResponseBodyAsString(), HTTPError.class);
-                            return new BusinessException(HttpStatus.valueOf(ex.getRawStatusCode()), errorResponse.getMessage());
-                        }  
-                    } catch(JsonProcessingException e){
-                        return new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR, "Error en el servidor, intente más tarde...");
-                    }
-                })
-                .timeout(Duration.ofMillis(10_000))
-                .switchIfEmpty(Mono.error(new RuntimeException("No se encontro el recurso")));
-    }*/
     
 
     @Override
