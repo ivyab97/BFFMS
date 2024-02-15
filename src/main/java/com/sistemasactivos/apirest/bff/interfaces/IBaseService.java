@@ -16,7 +16,7 @@ public interface IBaseService <C extends BaseDTO, CR extends BaseDTO, ID extends
     public Mono<C> findById(ID id);  // Busca todos los registros, activos o no
     public Mono<C> save (CR request);
     public Mono<C> update(ID id, CR request);
-    public Mono<Void> softDelete(ID id);
+    public Mono<?> softDelete(ID id);
     public Mono<C> activate(ID id) ;  //Da de alta un recurso
     
 }

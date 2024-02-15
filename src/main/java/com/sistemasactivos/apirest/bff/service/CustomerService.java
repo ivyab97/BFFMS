@@ -38,7 +38,7 @@ public class CustomerService extends BaseService<CustomerResponse, CustomerReque
 
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
-                    .path("/")
+                    .path("")
                     .queryParam("status", status)
                     .queryParam("page", page)
                     .queryParam("size", size)
@@ -60,7 +60,7 @@ public class CustomerService extends BaseService<CustomerResponse, CustomerReque
 
     @Override
     public Mono<CustomerResponse> findByIdActive(Integer id) {
-        return webClient.put()
+        return webClient.get()
                 .uri(uriBuilder -> uriBuilder
                     .path("/{id}")
                     .build(id))
@@ -124,7 +124,7 @@ public class CustomerService extends BaseService<CustomerResponse, CustomerReque
     @Override
     public Mono<CustomerResponse> update(Integer id, CustomerRequest request) {
         return webClient.put()
-                .uri("" + id)
+                .uri("/" + id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(request), CustomerRequest.class)
                 .retrieve()
@@ -142,23 +142,27 @@ public class CustomerService extends BaseService<CustomerResponse, CustomerReque
     }
 
     
-    @Override
-    public Mono<Void> softDelete(Integer id) {
+    /*@Override
+    public Mono<CustomerResponse> softDelete(Integer id) {
         return webClient.delete()
-            .uri("" + id)
+            .uri("/" + id)
                 .retrieve()
-                .bodyToMono(Void.class)
+                .bodyToMono(CustomerResponse.class)
                 .onErrorMap(WebClientResponseException.class, ex -> {
                     try{
-                        HTTPError errorResponse = new ObjectMapper().readValue(ex.getResponseBodyAsString(), HTTPError.class);
-                        return new BusinessException(HttpStatus.valueOf(ex.getRawStatusCode()), errorResponse.getMessage());
+                        if (ex.getStatusCode().equals(HttpStatus.NO_CONTENT)) {
+                            return new BusinessException(HttpStatus.valueOf(ex.getRawStatusCode()), "Registro eliminado exitosamente.");
+                        } else {
+                            HTTPError errorResponse = new ObjectMapper().readValue(ex.getResponseBodyAsString(), HTTPError.class);
+                            return new BusinessException(HttpStatus.valueOf(ex.getRawStatusCode()), errorResponse.getMessage());
+                        }  
                     } catch(JsonProcessingException e){
                         return new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR, "Error en el servidor, intente más tarde...");
                     }
                 })
                 .timeout(Duration.ofMillis(10_000))
                 .switchIfEmpty(Mono.error(new RuntimeException("No se encontro el recurso")));
-    }
+    }*/
     
 
     @Override
@@ -180,5 +184,27 @@ public class CustomerService extends BaseService<CustomerResponse, CustomerReque
                 .timeout(Duration.ofMillis(10_000))
                 .switchIfEmpty(Mono.error(new RuntimeException("No se encontro el recurso")));
     }
+    
+    
+    @Override
+    public Mono<?> softDelete(Integer id) {
+        return webClient.delete()
+            .uri("/" + id)
+                .retrieve()
+                .bodyToMono(CustomerResponse.class)
+                .onErrorMap(WebClientResponseException.class, ex -> {
+                    try{
+                        
+                        HTTPError errorResponse = new ObjectMapper().readValue(ex.getResponseBodyAsString(), HTTPError.class);
+                        return new BusinessException(HttpStatus.valueOf(ex.getRawStatusCode()), errorResponse.getMessage());
+                        
+                    } catch(JsonProcessingException e){
+                        return new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR, "Error en el servidor, intente más tarde...");
+                    }
+                })
+                .timeout(Duration.ofMillis(10_000))
+                .switchIfEmpty(Mono.error(new BusinessException(HttpStatus.NO_CONTENT, "Eliminado con exito.")));
+    }
+
 
 }

@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -89,8 +91,9 @@ public abstract class BaseController <E extends BaseDTO, D extends BaseDTO, S ex
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = HTTPError.class)))
         }
     )
-    public Mono<?> save(@RequestBody D entity) {
-        return service.save(entity);
+    public Mono<ResponseEntity<?>> save(@RequestBody D entity) {
+        return service.save(entity)
+                .map(savedEntity -> ResponseEntity.status(HttpStatus.CREATED).body(savedEntity));
     }
 
     @Override
