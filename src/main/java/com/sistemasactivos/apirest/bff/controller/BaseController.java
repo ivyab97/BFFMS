@@ -2,6 +2,7 @@ package com.sistemasactivos.apirest.bff.controller;
 
 import com.sistemasactivos.apirest.bff.interfaces.IBaseController;
 import com.sistemasactivos.apirest.bff.model.BaseDTO;
+import com.sistemasactivos.apirest.bff.model.PagedResponse;
 import com.sistemasactivos.apirest.bff.resources.exception.HTTPError;
 import com.sistemasactivos.apirest.bff.service.BaseService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,7 +34,7 @@ public abstract class BaseController <E extends BaseDTO, D extends BaseDTO, S ex
         summary = "Obtener todos los registros.",
         description = "Obtiene todos los registros.",
         responses = {
-            @ApiResponse(responseCode = "200", ref = "okAPI"),
+            @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = PagedResponse.class))),
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = HTTPError.class)))
         }
     )
