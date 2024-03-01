@@ -21,7 +21,7 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/bff/account")
+@RequestMapping("/bff/accounts")
 public class AccountController extends BaseController<AccountResponse, AccountRequest, AccountService>{
 
     

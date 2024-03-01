@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/bff/customer")
+@RequestMapping("/bff/customers")
 public class CustomerController extends BaseController<CustomerResponse, CustomerRequest, CustomerService>{
     
     @Override

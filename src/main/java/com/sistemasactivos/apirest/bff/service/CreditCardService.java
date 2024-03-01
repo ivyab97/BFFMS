@@ -1,22 +1,16 @@
 package com.sistemasactivos.apirest.bff.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sistemasactivos.apirest.bff.interfaces.ICreditCardService;
 import com.sistemasactivos.apirest.bff.model.CreditCardRequest;
 import com.sistemasactivos.apirest.bff.model.CreditCardResponse;
 import com.sistemasactivos.apirest.bff.model.CustomerRequest;
 import com.sistemasactivos.apirest.bff.model.PagedResponse;
-import com.sistemasactivos.apirest.bff.resources.exception.BusinessException;
-import com.sistemasactivos.apirest.bff.resources.exception.HTTPError;
-import java.time.Duration;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
 /**
@@ -26,6 +20,8 @@ import reactor.core.publisher.Mono;
 @Service
 public class CreditCardService extends BaseService<CreditCardResponse, CreditCardRequest, Integer> implements ICreditCardService{
     
+    @Value("${secondPath}")
+    String secondPath;
     
     public CreditCardService(@Qualifier("getWebClientCreditCard") WebClient webClient, ParameterizedTypeReference<PagedResponse<CreditCardResponse>> responseTypePaged, ParameterizedTypeReference<CreditCardResponse> responseTypeE, ParameterizedTypeReference<CreditCardRequest> responseTypeR) {
         super(webClient, responseTypePaged, responseTypeE, responseTypeR);
@@ -36,7 +32,7 @@ public class CreditCardService extends BaseService<CreditCardResponse, CreditCar
     public Mono<CreditCardResponse> save(Integer accountId, CreditCardRequest request) {
         return handleErrors(
                 webClient.post()
-                .uri("/" + accountId)
+                .uri(secondPath + accountId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(request), CustomerRequest.class)
                 .retrieve()

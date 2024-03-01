@@ -3,6 +3,7 @@ package com.sistemasactivos.apirest.bff.config;
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -16,20 +17,40 @@ import reactor.netty.http.client.HttpClient;
 @Configuration
 public class WebFluxConfig implements WebFluxConfigurer  {
     
+    @Value("${firstUrlBase}")
+    String firstUrlBase;
+    
+    @Value("${secondUrlBase}")
+    String secondUrlBase;
+    
+    @Value("${thirdUrlBase}")
+    String thirdUrlBase;
+    
+    @Value("${ms.first.user}")
+    String msFirstUser;
+    
+    @Value("${ms.second.user}")
+    String msSecondUser;
+    
+    @Value("${ms.first.pass}")
+    String firstPass;
+    
+    @Value("${ms.second.pass}")
+    String secondPass;
     
     @Bean
     public WebClient getWebClientCustomer(){
-        return createWebClient("http://localhost:8082/api/v1/customers", "admin", "12345");
+        return createWebClient(firstUrlBase, msFirstUser, firstPass);
     }
     
     @Bean
     public WebClient getWebClientAccount(){
-        return createWebClient("http://localhost:8081/api/v1/accounts", "admin", "12345");
+        return createWebClient(secondUrlBase, msSecondUser, secondPass);
     }
     
     @Bean
     public WebClient getWebClientCreditCard(){
-        return createWebClient("http://localhost:8081/api/v1/creditcards", "admin", "12345");
+        return createWebClient(thirdUrlBase, msSecondUser, secondPass);
     }
     
     private WebClient createWebClient (String url, String user, String password){

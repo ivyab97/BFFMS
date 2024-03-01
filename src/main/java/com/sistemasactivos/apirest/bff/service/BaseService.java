@@ -4,14 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sistemasactivos.apirest.bff.interfaces.IBaseService;
 import com.sistemasactivos.apirest.bff.model.BaseDTO;
-import com.sistemasactivos.apirest.bff.model.CustomerRequest;
-import com.sistemasactivos.apirest.bff.model.CustomerResponse;
 import com.sistemasactivos.apirest.bff.model.PagedResponse;
 import com.sistemasactivos.apirest.bff.resources.exception.BusinessException;
 import com.sistemasactivos.apirest.bff.resources.exception.HTTPError;
 import java.io.Serializable;
 import java.time.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,6 +28,18 @@ public abstract class BaseService<E extends BaseDTO, R extends BaseDTO, ID exten
     ParameterizedTypeReference<PagedResponse<E>> responseTypePaged;
     ParameterizedTypeReference<E> responseTypeE;
     ParameterizedTypeReference<R> responseTypeR;
+    
+    @Value("${firstPath}")
+    String firstPath;
+    
+    @Value("${secondPath}")
+    String secondPath;
+    
+    @Value("${thirdPath}")
+    String thirdPath;
+    
+    @Value("${fourthPath}")
+    String fourthPath;
 
     
     public BaseService(WebClient webClient, ParameterizedTypeReference<PagedResponse<E>> responseTypePaged, ParameterizedTypeReference<E> responseTypeE, ParameterizedTypeReference<R> responseTypeR) {
@@ -48,7 +59,7 @@ public abstract class BaseService<E extends BaseDTO, R extends BaseDTO, ID exten
             }
         })
         .timeout(Duration.ofMillis(10_000))
-        .switchIfEmpty(Mono.error(new RuntimeException("No se encontro el recurso")));
+        .switchIfEmpty(Mono.error(new BusinessException(HttpStatus.NO_CONTENT, "Eliminado con exito.")));
     }
 
     @Override
@@ -56,7 +67,7 @@ public abstract class BaseService<E extends BaseDTO, R extends BaseDTO, ID exten
         return handleErrors(
             webClient.get()
                 .uri(uriBuilder -> uriBuilder
-                    .path("")
+                    .path(firstPath)
                     .queryParam("status", status)
                     .queryParam("page", page)
                     .queryParam("size", size)
@@ -72,7 +83,7 @@ public abstract class BaseService<E extends BaseDTO, R extends BaseDTO, ID exten
         return handleErrors(
                 webClient.get()
                 .uri(uriBuilder -> uriBuilder
-                    .path("/{id}")
+                    .path(secondPath + "{id}")
                     .build(id))
                 .retrieve()
                 .bodyToMono(responseTypeE)
@@ -85,7 +96,7 @@ public abstract class BaseService<E extends BaseDTO, R extends BaseDTO, ID exten
         return handleErrors(
                 webClient.get()
                 .uri(uriBuilder -> uriBuilder
-                    .path("/{id}/admin")
+                    .path(secondPath + "{id}" + thirdPath)
                     .build(id))
                 .retrieve()
                 .bodyToMono(responseTypeE)
@@ -97,9 +108,9 @@ public abstract class BaseService<E extends BaseDTO, R extends BaseDTO, ID exten
     public Mono<E> save(R request) {
         return handleErrors(
                 webClient.post()
-                .uri("")
+                .uri(firstPath)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(Mono.just(request), CustomerRequest.class)
+                .body(Mono.just(request), responseTypeR)
                 .retrieve()
                 .bodyToMono(responseTypeE)
         );   
@@ -110,7 +121,7 @@ public abstract class BaseService<E extends BaseDTO, R extends BaseDTO, ID exten
     public Mono<E> update(Integer id, R request) {
         return handleErrors(
                 webClient.put()
-                .uri("/" + id)
+                .uri(secondPath + id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(request), responseTypeR)
                 .retrieve()
@@ -126,7 +137,7 @@ public abstract class BaseService<E extends BaseDTO, R extends BaseDTO, ID exten
         return handleErrors(
                 webClient.put()
                 .uri(uriBuilder -> uriBuilder
-                    .path("/{id}/activate")
+                    .path(secondPath + "{id}" + fourthPath)
                     .build(id))
                 .retrieve()
                 .bodyToMono(responseTypeE)
@@ -138,7 +149,7 @@ public abstract class BaseService<E extends BaseDTO, R extends BaseDTO, ID exten
     public Mono<E> softDelete(Integer id) {
         return handleErrors(
                 webClient.delete()
-                .uri("/" + id)
+                .uri(secondPath + id)
                 .retrieve()
                 .bodyToMono(responseTypeE)
         );
