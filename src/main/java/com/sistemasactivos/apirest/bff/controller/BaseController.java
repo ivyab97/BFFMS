@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import reactor.core.publisher.Mono;
 
 
-public abstract class BaseController <E extends BaseDTO, D extends BaseDTO, S extends BaseService<E, D, Integer>> implements IBaseController<E, D, Integer>{
+public abstract class BaseController <E extends BaseDTO, D extends BaseDTO, S extends BaseService<E, D, Long>> implements IBaseController<E, D, Long>{
     
     @Autowired
     public S service;
@@ -39,10 +39,10 @@ public abstract class BaseController <E extends BaseDTO, D extends BaseDTO, S ex
         }
     )
     public Mono<PagedResponse<E>> getAllRecord(
-            @RequestParam(required = false) Boolean status,
+            @RequestParam(required = false) Boolean enabled,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer size) {
-        return service.findAllByStatusEquals(status, page, size);
+        return service.findAllByEnabledEquals(enabled, page, size);
     }
     
     
@@ -58,7 +58,7 @@ public abstract class BaseController <E extends BaseDTO, D extends BaseDTO, S ex
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = HTTPError.class)))
         }
     )
-    public Mono<E> getRecordById(@PathVariable Integer id) {
+    public Mono<E> getRecordById(@PathVariable Long id) {
         return service.findById(id);
     }
     
@@ -75,7 +75,7 @@ public abstract class BaseController <E extends BaseDTO, D extends BaseDTO, S ex
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = HTTPError.class)))
         }
     )
-    public Mono<E> getRecordByActiveId(@PathVariable Integer id) {
+    public Mono<E> getRecordByActiveId(@PathVariable Long id) {
         return service.findByIdActive(id);
     }
     
@@ -109,7 +109,7 @@ public abstract class BaseController <E extends BaseDTO, D extends BaseDTO, S ex
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = HTTPError.class)))
         }
     )
-    public Mono<E> update(@PathVariable Integer id, @RequestBody D entity) {
+    public Mono<E> update(@PathVariable Long id, @RequestBody D entity) {
         return service.update(id, entity);
     }
     
@@ -126,7 +126,7 @@ public abstract class BaseController <E extends BaseDTO, D extends BaseDTO, S ex
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = HTTPError.class)))
         }
     )
-    public Mono<E> activate(@PathVariable Integer id) {
+    public Mono<E> activate(@PathVariable Long id) {
             return service.activate(id);
     }
     
@@ -143,7 +143,7 @@ public abstract class BaseController <E extends BaseDTO, D extends BaseDTO, S ex
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = HTTPError.class)))
         }
     )
-    public Mono<?> delete(@PathVariable Integer id) {
+    public Mono<?> delete(@PathVariable Long id) {
             return service.softDelete(id);
     }
     

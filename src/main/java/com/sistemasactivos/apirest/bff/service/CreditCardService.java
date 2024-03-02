@@ -18,7 +18,7 @@ import reactor.core.publisher.Mono;
  */
 
 @Service
-public class CreditCardService extends BaseService<CreditCardResponse, CreditCardRequest, Integer> implements ICreditCardService{
+public class CreditCardService extends BaseService<CreditCardResponse, CreditCardRequest, Long> implements ICreditCardService{
     
     @Value("${secondPath}")
     String secondPath;
@@ -29,7 +29,7 @@ public class CreditCardService extends BaseService<CreditCardResponse, CreditCar
     
     
     @Override
-    public Mono<CreditCardResponse> save(Integer accountId, CreditCardRequest request) {
+    public Mono<CreditCardResponse> save(Long accountId, CreditCardRequest request) {
         return handleErrors(
                 webClient.post()
                 .uri(secondPath + accountId)

@@ -23,7 +23,7 @@ public class AccountResponse extends BaseDTO{
     private Integer Id;
     
     @Schema(description = "Status of soft delete")
-    private Boolean active;
+    private Boolean enabled;
     
     @Schema(description = "Date of creation")
     private Date createdAt;

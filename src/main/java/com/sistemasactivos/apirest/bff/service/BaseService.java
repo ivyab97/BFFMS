@@ -22,7 +22,7 @@ import reactor.core.publisher.Mono;
  * @author Ivan Andres Brestt
  */
 
-public abstract class BaseService<E extends BaseDTO, R extends BaseDTO, ID extends Serializable> implements IBaseService<E, R, Integer>{
+public abstract class BaseService<E extends BaseDTO, R extends BaseDTO, ID extends Serializable> implements IBaseService<E, R, Long>{
 
     WebClient webClient;
     ParameterizedTypeReference<PagedResponse<E>> responseTypePaged;
@@ -63,12 +63,12 @@ public abstract class BaseService<E extends BaseDTO, R extends BaseDTO, ID exten
     }
 
     @Override
-    public Mono<PagedResponse<E>> findAllByStatusEquals(Boolean status, Integer page, Integer size) {
+    public Mono<PagedResponse<E>> findAllByEnabledEquals(Boolean enabled, Integer page, Integer size) {
         return handleErrors(
             webClient.get()
                 .uri(uriBuilder -> uriBuilder
                     .path(firstPath)
-                    .queryParam("status", status)
+                    .queryParam("enabled", enabled)
                     .queryParam("page", page)
                     .queryParam("size", size)
                     .build())
@@ -79,7 +79,7 @@ public abstract class BaseService<E extends BaseDTO, R extends BaseDTO, ID exten
     
 
     @Override
-    public Mono<E> findByIdActive(Integer id) { 
+    public Mono<E> findByIdActive(Long id) { 
         return handleErrors(
                 webClient.get()
                 .uri(uriBuilder -> uriBuilder
@@ -92,7 +92,7 @@ public abstract class BaseService<E extends BaseDTO, R extends BaseDTO, ID exten
      
 
     @Override
-    public Mono<E> findById(Integer id) {
+    public Mono<E> findById(Long id) {
         return handleErrors(
                 webClient.get()
                 .uri(uriBuilder -> uriBuilder
@@ -118,7 +118,7 @@ public abstract class BaseService<E extends BaseDTO, R extends BaseDTO, ID exten
     
 
     @Override
-    public Mono<E> update(Integer id, R request) {
+    public Mono<E> update(Long id, R request) {
         return handleErrors(
                 webClient.put()
                 .uri(secondPath + id)
@@ -133,7 +133,7 @@ public abstract class BaseService<E extends BaseDTO, R extends BaseDTO, ID exten
     
 
     @Override
-    public Mono<E> activate(Integer id) {
+    public Mono<E> activate(Long id) {
         return handleErrors(
                 webClient.put()
                 .uri(uriBuilder -> uriBuilder
@@ -146,7 +146,7 @@ public abstract class BaseService<E extends BaseDTO, R extends BaseDTO, ID exten
     
     
     @Override
-    public Mono<E> softDelete(Integer id) {
+    public Mono<E> softDelete(Long id) {
         return handleErrors(
                 webClient.delete()
                 .uri(secondPath + id)

@@ -8,6 +8,6 @@ import reactor.core.publisher.Mono;
  * @author Ivan Andres Brestt
  */
 
-public interface ICreditCardService extends IBaseService<CreditCardResponse, CreditCardRequest, Integer>{
-    public Mono<CreditCardResponse> save (Integer accountId, CreditCardRequest request);
+public interface ICreditCardService extends IBaseService<CreditCardResponse, CreditCardRequest, Long>{
+    public Mono<CreditCardResponse> save (Long accountId, CreditCardRequest request);
 }

@@ -7,6 +7,6 @@ import com.sistemasactivos.apirest.bff.model.CustomerResponse;
  * @author Ivan Andres Brestt
  */
 
-public interface ICustomerService extends IBaseService<CustomerResponse, CustomerRequest, Integer>{
+public interface ICustomerService extends IBaseService<CustomerResponse, CustomerRequest, Long>{
 
 }

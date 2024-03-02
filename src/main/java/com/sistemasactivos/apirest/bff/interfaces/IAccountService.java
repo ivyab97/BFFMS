@@ -8,6 +8,6 @@ import com.sistemasactivos.apirest.bff.model.BaseDTO;
  * @author Ivan Andres Brestt
  */
 
-public interface IAccountService extends IBaseService<AccountResponse, AccountRequest, Integer>{
+public interface IAccountService extends IBaseService<AccountResponse, AccountRequest, Long>{
 
 }

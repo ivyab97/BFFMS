@@ -9,9 +9,9 @@ import reactor.core.publisher.Mono;
  * @author Ivan Andres Brestt
  */
 
-public interface IBaseService <C extends BaseDTO, CR extends BaseDTO, ID extends Integer>{
+public interface IBaseService <C extends BaseDTO, CR extends BaseDTO, ID extends Long>{
 
-    public Mono<PagedResponse<C>> findAllByStatusEquals(Boolean status, Integer page, Integer size);
+    public Mono<PagedResponse<C>> findAllByEnabledEquals(Boolean enabled, Integer page, Integer size);
     public Mono<C> findByIdActive(ID id); // Solo busca los activos
     public Mono<C> findById(ID id);  // Busca todos los registros, activos o no
     public Mono<C> save (CR request);

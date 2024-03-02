@@ -24,6 +24,11 @@ import org.springframework.format.annotation.DateTimeFormat;
 @AllArgsConstructor
 public class CustomerRequest extends BaseDTO{
     
+    @Schema(description = "Id of user", example = "10")
+    @NotNull(message = "UserId no puede ser null.")
+    @JsonProperty(required = true)    
+    private Long userId;
+    
     @Schema(description = "Customer name", example = "Leonel")
     @NotNull(message = "Name no puede ser null.")
     @Size(min = 2, max = 30, message = "Name debe tener entre 2 y 20 caracteres.")

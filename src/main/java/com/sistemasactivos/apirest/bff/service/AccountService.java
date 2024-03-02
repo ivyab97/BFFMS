@@ -14,7 +14,7 @@ import org.springframework.core.ParameterizedTypeReference;
  */
 
 @Service
-public class AccountService extends BaseService<AccountResponse, AccountRequest, Integer> implements IAccountService{
+public class AccountService extends BaseService<AccountResponse, AccountRequest, Long> implements IAccountService{
 
     public AccountService(@Qualifier("getWebClientAccount") WebClient webClient, ParameterizedTypeReference<PagedResponse<AccountResponse>> responseTypePaged, ParameterizedTypeReference<AccountResponse> responseTypeE, ParameterizedTypeReference<AccountRequest> responseTypeR) {
         super(webClient, responseTypePaged, responseTypeE, responseTypeR);

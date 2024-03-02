@@ -22,6 +22,9 @@ public class CustomerResponse extends BaseDTO{
     @Schema(description = "Identifier attribute", example = "10")
     private Integer customerId;
     
+    @Schema(description = "Id of user", example = "10")
+    private Long userId;
+    
     @Schema(description = "Customer name", example = "Leonel")
     @Size(min = 2, max = 30)
     private String name;
@@ -44,7 +47,7 @@ public class CustomerResponse extends BaseDTO{
     private String sex;
     
     @Schema(description = "Status of soft delete")
-    private Boolean active;
+    private Boolean enabled;
     
     @Schema(description = "Date of creation")
     private Date createdAt;

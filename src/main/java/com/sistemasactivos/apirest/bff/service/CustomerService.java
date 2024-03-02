@@ -14,7 +14,7 @@ import org.springframework.core.ParameterizedTypeReference;
  */
 
 @Service
-public class CustomerService extends BaseService<CustomerResponse, CustomerRequest, Integer> implements ICustomerService{
+public class CustomerService extends BaseService<CustomerResponse, CustomerRequest, Long> implements ICustomerService{
     
     
     public CustomerService(@Qualifier("getWebClientCustomer") WebClient webClient, ParameterizedTypeReference<PagedResponse<CustomerResponse>> responseTypePaged, ParameterizedTypeReference<CustomerResponse> responseTypeE, ParameterizedTypeReference<CustomerRequest> responseTypeR) {

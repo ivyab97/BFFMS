@@ -27,14 +27,14 @@ public class CustomerController extends BaseController<CustomerResponse, Custome
     
     @Override
     @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = CustomerResponse.class)))
-        public Mono<CustomerResponse> getRecordById(@PathVariable Integer id) {
+        public Mono<CustomerResponse> getRecordById(@PathVariable Long id) {
         return super.getRecordById(id);
     }
         
         
     @Override
     @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = CustomerResponse.class)))
-    public Mono<CustomerResponse> getRecordByActiveId(@PathVariable Integer id) {
+    public Mono<CustomerResponse> getRecordByActiveId(@PathVariable Long id) {
         return super.getRecordByActiveId(id);
     }
     
@@ -49,7 +49,7 @@ public class CustomerController extends BaseController<CustomerResponse, Custome
     
     @Override
     @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = CustomerResponse.class)))
-    public Mono<CustomerResponse> update(@PathVariable Integer id, @RequestBody CustomerRequest request) {
+    public Mono<CustomerResponse> update(@PathVariable Long id, @RequestBody CustomerRequest request) {
         return super.update(id, request);
     }
 }

@@ -27,14 +27,14 @@ public class AccountController extends BaseController<AccountResponse, AccountRe
     
     @Override
     @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = AccountResponse.class)))
-        public Mono<AccountResponse> getRecordById(@PathVariable Integer id) {
+        public Mono<AccountResponse> getRecordById(@PathVariable Long id) {
         return super.getRecordById(id);
     }
         
         
     @Override
     @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = AccountResponse.class)))
-    public Mono<AccountResponse> getRecordByActiveId(@PathVariable Integer id) {
+    public Mono<AccountResponse> getRecordByActiveId(@PathVariable Long id) {
         return super.getRecordByActiveId(id);
     }
     
@@ -49,7 +49,7 @@ public class AccountController extends BaseController<AccountResponse, AccountRe
     
     @Override
     @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = AccountResponse.class)))
-    public Mono<AccountResponse> update(@PathVariable Integer id, @RequestBody AccountRequest request) {
+    public Mono<AccountResponse> update(@PathVariable Long id, @RequestBody AccountRequest request) {
         return super.update(id, request);
     }
 }

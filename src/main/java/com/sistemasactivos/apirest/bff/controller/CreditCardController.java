@@ -37,14 +37,14 @@ public class CreditCardController extends BaseController<CreditCardResponse, Cre
     
     @Override
     @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = CreditCardResponse.class)))
-        public Mono<CreditCardResponse> getRecordById(@PathVariable Integer id) {
+        public Mono<CreditCardResponse> getRecordById(@PathVariable Long id) {
         return super.getRecordById(id);
     }
         
         
     @Override
     @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = CreditCardResponse.class)))
-    public Mono<CreditCardResponse> getRecordByActiveId(@PathVariable Integer id) {
+    public Mono<CreditCardResponse> getRecordByActiveId(@PathVariable Long id) {
         return super.getRecordByActiveId(id);
     }
     
@@ -60,7 +60,7 @@ public class CreditCardController extends BaseController<CreditCardResponse, Cre
             @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = HTTPError.class)))
         }
     )
-    public Mono<ResponseEntity<CreditCardResponse>> save(@PathVariable Integer accountId, @RequestBody CreditCardRequest request) {
+    public Mono<ResponseEntity<CreditCardResponse>> save(@PathVariable Long accountId, @RequestBody CreditCardRequest request) {
         return creditCardService.save(accountId, request)
                 .map(savedEntity -> ResponseEntity.status(HttpStatus.CREATED).body(savedEntity));
     }
@@ -68,7 +68,7 @@ public class CreditCardController extends BaseController<CreditCardResponse, Cre
     
     @Override
     @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = CreditCardResponse.class)))
-    public Mono<CreditCardResponse> update(@PathVariable Integer id, @RequestBody CreditCardRequest request) {
+    public Mono<CreditCardResponse> update(@PathVariable Long id, @RequestBody CreditCardRequest request) {
         return super.update(id, request);
     }
 }

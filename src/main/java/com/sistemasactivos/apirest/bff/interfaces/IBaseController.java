@@ -15,7 +15,7 @@ public interface IBaseController <E extends BaseDTO, D extends BaseDTO, ID exten
     public Mono<E> getRecordById(@PathVariable ID id);
     public Mono<E> activate(@PathVariable ID id);
     
-    public Mono<E> getRecordByActiveId(@PathVariable ID id);
+    public Mono<E> getRecordByActiveId(@PathVariable Long id);
     public Mono<ResponseEntity<E>> save(@RequestBody D entity);
     public Mono<E> update(@PathVariable ID id, @RequestBody D entity);
     public Mono<?> delete(@PathVariable ID id);
